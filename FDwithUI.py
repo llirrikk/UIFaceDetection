@@ -88,8 +88,10 @@ def button_fullpath():
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             faces = faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
 
+            countfaces = 0
             for (x, y, w, h) in faces:
                 cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                countfaces += 1
 
             root2 = Toplevel(root)
 
@@ -100,7 +102,10 @@ def button_fullpath():
             image = ImageTk.PhotoImage(image)
 
             Label(root2, image=image, height=700, width=1000).pack(side=TOP)
-            Button(root2, text="Сохранить лица", width=50, height=100, font=("Times", "15"), command=lambda: check(pathtoimg, faces)).pack(side=BOTTOM)
+            if countfaces > 0:
+                Button(root2, text="Сохранить лица" + " (" + str(countfaces) + ")", width=50, height=100, font=("Times", "15"), command=lambda: check(pathtoimg, faces)).pack(side=BOTTOM)
+            else:
+                Label(root2, text="There is no faces", width=50, height=100, font=("Times", "15")).pack(side=BOTTOM)
 
             root2.protocol('WM_DELETE_WINDOW', lambda: end(root2))
 
@@ -130,3 +135,4 @@ else:
 
 root.resizable(False, False)
 root.mainloop()
+
